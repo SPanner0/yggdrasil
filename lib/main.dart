@@ -22,10 +22,10 @@ class MyApp extends StatelessWidget {
 }
 
 final ThemeData appTheme = ThemeData(
-  // primaryColor: const Color(0xFF7CB342), // Green
-  colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF7CB342)),
-  // splashColor: const Color(0xFFF07167), // Light pink
-  // scaffoldBackgroundColor: const Color(0xFFF5F5F5), // Light gray
+  primaryColor: const Color(0xFF7CB342), // Green
+  colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF7CB342), brightness: Brightness.dark),
+  splashColor: const Color(0xFFF07167), // Light pink
+  scaffoldBackgroundColor: Colors.teal, // Light gray
 
   textTheme: TextTheme(
     headlineLarge: GoogleFonts.montserrat(

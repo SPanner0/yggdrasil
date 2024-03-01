@@ -36,6 +36,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   google_fonts: ^6.1.0
+  tuple: ^2.0.2
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,10 @@ flutter:
      - assets/images/window.jpg
      - assets/images/pot.png
      - assets/images/table.jpg
+     - assets/images/plants/sprout.png
+     - assets/images/plants/cactus.png
+     - assets/images/plants/mushroom.png
+     - assets/images/plants/sunflower.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

@@ -8,9 +8,9 @@ class GamePage extends StatefulWidget {
   State<StatefulWidget> createState() => _GamePageState();
 }
 
-class _GamePageState extends State<GamePage> {
-    RestorableInt coins = RestorableInt(0);
-    RestorableInt day = RestorableInt(0);
+class _GamePageState extends State<GamePage> with RestorationMixin {
+  RestorableInt coins = RestorableInt(0);
+  RestorableInt day = RestorableInt(0);
 
   @override
   Widget build(BuildContext context) {
@@ -19,36 +19,61 @@ class _GamePageState extends State<GamePage> {
         body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
           return Column(children: [
+            ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    coins.value += 1;
+                  });
+                },
+                child: Text("Coins: ${coins.value}")),
             SizedBox(
               width: constraints.maxWidth,
               height: constraints.maxHeight * 0.6,
               child: Image.asset("assets/images/window.jpg"),
             ),
-            Container(
-                decoration: const BoxDecoration(
-                    image: DecorationImage(image: AssetImage("assets/images/table.jpg"), fit: BoxFit.fill),
-                    ),
-                child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                  Stack(children: [
-                    PlantBox(),
-                    Pot(),
-                  ]),
-                  Stack(children: [
-                    PlantBox(),
-                    Pot(),
-                  ]),
-                  Stack(children: [
-                    PlantBox(),
-                    Pot(),
-                  ])
-                ]))
+            const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  PottedPlant(),
+                  PottedPlant(),
+                  PottedPlant(),
+                ])
           ]);
         }));
   }
+
+  @override
+  String? get restorationId => 'GamePage';
+
+  @override
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
+    registerForRestoration(coins, 'coins');
+    registerForRestoration(day, 'day');
+  }
 }
 
+/// Combines a plant box and a pot to create a potted plant
+class PottedPlant extends StatelessWidget {
+  const PottedPlant({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+        // This part's a little fucked with the positioning
+        // TODO: Make size dynamic depending on plant type
+        width: 150,
+        height: 200,
+        child: Stack(children: [
+          Positioned(left: 20, top: 50, child: PlantBox()),
+          Positioned(
+            bottom: 10,
+            child: Pot(),
+          ),
+        ]));
+  }
+}
+
+/// Contains a plant and all the logic needed to determine plant type, stage of grow, etc.
 class PlantBox extends StatefulWidget {
   const PlantBox({super.key});
 
@@ -56,12 +81,30 @@ class PlantBox extends StatefulWidget {
   State<PlantBox> createState() => _PlantBoxState();
 }
 
-class _PlantBoxState extends State<PlantBox> {
-  final PlantType plantType = PlantType.none;
+class _PlantBoxState extends State<PlantBox> with RestorationMixin {
+  RestorableEnum<PlantType> restorablePlantType =
+      RestorableEnum(PlantType.sunflower, values: PlantType.values);
+  RestorableInt restorablePlantStage = RestorableInt(2);
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(plantType.imagePath!);
+    switch (restorablePlantStage.value) {
+      case 0:
+        return const SizedBox.shrink();
+      case 1:
+        return Image.asset("assets/images/plants/sprout.png");
+      default:
+        return Image.asset(restorablePlantType.value.imagePath!);
+    }
+  }
+
+  @override
+  String? get restorationId => 'PlantBox';
+
+  @override
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
+    registerForRestoration(restorablePlantStage, 'stage');
+    registerForRestoration(restorablePlantType, 'plantType');
   }
 }
 
