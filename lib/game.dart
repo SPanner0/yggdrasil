@@ -46,23 +46,24 @@ class _GamePageState extends State<GamePage> with RestorationMixin {
 }
 
 class CoinsBar extends StatefulWidget {
+  // ISSUE: Does not refresh when coin amount changes, might just remove later
   final RestorableInt coins;
   const CoinsBar({super.key, required this.coins});
-
 
   @override
   State<StatefulWidget> createState() => _CoinsBarState();
 }
 
-class _CoinsBarState  extends State<CoinsBar>{
+class _CoinsBarState extends State<CoinsBar> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
         onPressed: () => {
-            setState(() {
-              widget.coins.value += 10;
-            })
-        }, child: Text("Coins: ${widget.coins.value}"));
+              setState(() {
+                widget.coins.value += 10;
+              })
+            },
+        child: Text("Coins: ${widget.coins.value}"));
   }
 }
 
@@ -88,7 +89,9 @@ class _PottedPlantState extends State<PottedPlant> {
               MaterialPageRoute(
                   builder: (context) => ShopPage(coins: widget.coins)));
 
-          setState(() {widget.coins.value -= purchasedPlant.price!;});
+          setState(() {
+            widget.coins.value -= purchasedPlant.price!;
+          });
         },
         child: SizedBox(
             // This part's a little fucked with the positioning
