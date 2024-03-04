@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'plants.dart';
+import 'shop.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -9,7 +10,7 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> with RestorationMixin {
-  RestorableInt coins = RestorableInt(0);
+  RestorableInt coins = RestorableInt(100);
   RestorableInt day = RestorableInt(0);
 
   @override
@@ -19,25 +20,17 @@ class _GamePageState extends State<GamePage> with RestorationMixin {
         body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
           return Column(children: [
-            ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    coins.value += 1;
-                  });
-                },
-                child: Text("Coins: ${coins.value}")),
+            CoinsBar(coins: coins),
             SizedBox(
               width: constraints.maxWidth,
               height: constraints.maxHeight * 0.6,
               child: Image.asset("assets/images/window.jpg"),
             ),
-            const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  PottedPlant(),
-                  PottedPlant(),
-                  PottedPlant(),
-                ])
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              PottedPlant(coins: coins),
+              PottedPlant(coins: coins),
+              PottedPlant(coins: coins),
+            ])
           ]);
         }));
   }
@@ -52,24 +45,63 @@ class _GamePageState extends State<GamePage> with RestorationMixin {
   }
 }
 
+class CoinsBar extends StatefulWidget {
+  final RestorableInt coins;
+  const CoinsBar({super.key, required this.coins});
+
+
+  @override
+  State<StatefulWidget> createState() => _CoinsBarState();
+}
+
+class _CoinsBarState  extends State<CoinsBar>{
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed: () => {
+            setState(() {
+              widget.coins.value += 10;
+            })
+        }, child: Text("Coins: ${widget.coins.value}"));
+  }
+}
+
 /// Combines a plant box and a pot to create a potted plant
-class PottedPlant extends StatelessWidget {
-  const PottedPlant({super.key});
+class PottedPlant extends StatefulWidget {
+  final RestorableInt coins;
+  const PottedPlant({super.key, required this.coins});
+
+  @override
+  State<StatefulWidget> createState() => _PottedPlantState();
+}
+
+class _PottedPlantState extends State<PottedPlant> {
+  PlantBox plantBox = const PlantBox();
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
-        // This part's a little fucked with the positioning
-        // TODO: Make size dynamic depending on plant type
-        width: 150,
-        height: 200,
-        child: Stack(children: [
-          Positioned(left: 20, top: 50, child: PlantBox()),
-          Positioned(
-            bottom: 10,
-            child: Pot(),
-          ),
-        ]));
+    return GestureDetector(
+        onTap: () async {
+          // TODO: Reroute to not shop if plant already exists
+          final PlantType purchasedPlant = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ShopPage(coins: widget.coins)));
+
+          setState(() {widget.coins.value -= purchasedPlant.price!;});
+        },
+        child: SizedBox(
+            // This part's a little fucked with the positioning
+            // TODO: Make size dynamic depending on plant type
+            width: 150,
+            height: 200,
+            child: Stack(children: [
+              Positioned(left: 20, top: 50, child: plantBox),
+              const Positioned(
+                bottom: 10,
+                child: Pot(),
+              ),
+            ])));
   }
 }
 
@@ -83,7 +115,7 @@ class PlantBox extends StatefulWidget {
 
 class _PlantBoxState extends State<PlantBox> with RestorationMixin {
   RestorableEnum<PlantType> restorablePlantType =
-      RestorableEnum(PlantType.sunflower, values: PlantType.values);
+      RestorableEnum(PlantType.none, values: PlantType.values);
   RestorableInt restorablePlantStage = RestorableInt(2);
 
   @override

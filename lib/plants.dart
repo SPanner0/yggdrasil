@@ -32,7 +32,7 @@ extension PlantDescription on PlantType {
 }
 
 final Map<PlantType, String> plantImagePath = {
-  PlantType.none: "",
+  PlantType.none: "assets/images/plants/none.png",
   PlantType.cactus: "assets/images/plants/cactus.png",
   PlantType.mushroom: "assets/images/plants/mushroom.png",
   PlantType.sunflower: "assets/images/plants/sunflower.png",
@@ -41,5 +41,18 @@ final Map<PlantType, String> plantImagePath = {
 extension PlantImagePath on PlantType {
     String? get imagePath {
         return plantImagePath[this];
+    }
+}
+
+final Map<PlantType, int> plantPrices = {
+  PlantType.none: 0,
+  PlantType.cactus: 10,
+  PlantType.mushroom: 20,
+  PlantType.sunflower: 30,
+};
+
+extension PlantPrice on PlantType {
+    int? get price {
+        return plantPrices[this];
     }
 }
