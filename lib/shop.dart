@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'plants.dart';
 
 class ShopPage extends StatelessWidget {
-  final RestorableInt coins;
+  final int coins;
   const ShopPage({super.key, required this.coins});
 
   @override
@@ -16,11 +16,11 @@ class ShopPage extends StatelessWidget {
           if (plant == PlantType.none) {
             continue;
           }
-          shopItems.add(ShopItem(plantType: plant, coins: coins.value));
+          shopItems.add(ShopItem(plantType: plant, coins: coins));
         }
         return Column(children: [
           ElevatedButton(
-              onPressed: () => {}, child: Text("Coins: ${coins.value}")),
+              onPressed: () => {}, child: Text("Coins: $coins")),
           Expanded(
               child: GridView.count(
             crossAxisCount: 2,
