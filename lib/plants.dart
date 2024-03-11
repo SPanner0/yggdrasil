@@ -56,3 +56,42 @@ extension PlantPrice on PlantType {
         return plantPrices[this];
     }
 }
+
+final Map<PlantType, int> plantGrowthTime = {
+  PlantType.none: 0,
+  PlantType.cactus: 1,
+  PlantType.mushroom: 3,
+  PlantType.sunflower: 5,
+};
+
+extension PlantGrowthTime on PlantType {
+    int? get growthTime {
+        return plantGrowthTime[this];
+    }
+}
+
+final Map<PlantType, int> plantWaterNeeded = {
+  PlantType.none: 0,
+  PlantType.cactus: 0,
+  PlantType.mushroom: 1,
+  PlantType.sunflower: 2,
+};
+
+extension PlantWaterNeeded on PlantType {
+    int? get waterNeeded {
+        return plantWaterNeeded[this];
+    }
+}
+
+final Map<PlantType, int> plantSunshineNeeded = {
+  PlantType.none: 0,
+  PlantType.cactus: 5,
+  PlantType.mushroom: 2,
+  PlantType.sunflower: 7,
+};
+
+extension PlantSunshineNeeded on PlantType {
+    int? get sunshineNeeded {
+        return plantSunshineNeeded[this];
+    }
+}
