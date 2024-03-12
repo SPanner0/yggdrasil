@@ -24,40 +24,42 @@ class _GamePageState extends ConsumerState<GamePage> with RestorationMixin {
         body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
           return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    ref.watch(gameDataProvider).addCoins(10);
-                  });
-                },
-                child: Text("Coins: ${ref.watch(gameDataProvider).coins}")),
-            ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    ref.watch(gameDataProvider).incrementDay();
-                    ref.watch(plantDataProvider(1).notifier).nextDay();
-                    ref.watch(plantDataProvider(2).notifier).nextDay();
-                    ref.watch(plantDataProvider(3).notifier).nextDay();
-                  });
-                },
-                child: Text("Day: ${ref.watch(gameDataProvider).day}")),
-            SizedBox(
-              width: constraints.maxWidth,
-              height: constraints.maxHeight * 0.6,
-              child: Image.asset("assets/images/window.jpg"),
-            ),
-            const Expanded(child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Expanded(child: PottedPlant(1)),
-                  Expanded(child: PottedPlant(2)),
-                  Expanded(child: PottedPlant(3)),
-                ])
-          )]);
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        ref.watch(gameDataProvider).addCoins(10);
+                      });
+                    },
+                    child: Text("Coins: ${ref.watch(gameDataProvider).coins}")),
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        ref.watch(gameDataProvider).incrementDay();
+                        ref.watch(plantDataProvider(1).notifier).nextDay();
+                        ref.watch(plantDataProvider(2).notifier).nextDay();
+                        ref.watch(plantDataProvider(3).notifier).nextDay();
+                      });
+                    },
+                    child: Text("Day: ${ref.watch(gameDataProvider).day}")),
+                SizedBox(
+                  width: constraints.maxWidth,
+                  height: constraints.maxHeight * 0.6,
+                  child: Image.asset("assets/images/window.jpg"),
+                ),
+                const Expanded(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                      Expanded(child: PottedPlant(1)),
+                      Expanded(child: PottedPlant(2)),
+                      Expanded(child: PottedPlant(3)),
+                    ]))
+              ]);
         }));
   }
 
@@ -92,48 +94,44 @@ class _PottedPlantState extends ConsumerState<PottedPlant>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(onTap: () async {
-          if (ref.watch(plantDataProvider(widget.id).notifier).plantType !=
-      PlantType.none) {
-    // We want the user to be able to grow their plant if it exists
-    // TODO: Add popup menu for plant growth logic
-    showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(child: GrowthPanel(id: widget.id));
+      if (ref.watch(plantDataProvider(widget.id).notifier).plantType !=
+          PlantType.none) {
+        // We want the user to be able to grow their plant if it exists
+        // TODO: Add popup menu for plant growth logic
+        showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(child: GrowthPanel(id: widget.id));
+            });
+      } else {
+        // and to buy a plant if it doesn't
+        final PlantType purchasedPlant = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ShopPage(coins: ref.read(gameDataProvider).coins))) ??
+            PlantType.none;
+        setState(() {
+          ref.watch(gameDataProvider).subtractCoins(purchasedPlant.price!);
+          ref
+              .watch(plantDataProvider(widget.id).notifier)
+              .setPlantType(purchasedPlant);
+          ref.watch(plantDataProvider(widget.id).notifier).setPlantStage(1);
         });
-          } else {
-    // and to buy a plant if it doesn't
-    final PlantType purchasedPlant = await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ShopPage(
-                    coins: ref.read(gameDataProvider).coins))) ??
-        PlantType.none;
-    setState(() {
-      ref.watch(gameDataProvider).subtractCoins(purchasedPlant.price!);
-      ref
-          .watch(plantDataProvider(widget.id).notifier)
-          .setPlantType(purchasedPlant);
-      ref.watch(plantDataProvider(widget.id).notifier).setPlantStage(1);
-    });
-          }
-        }, child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-    return SizedBox(
-        // This part's a little fucked with the positioning
-        // TODO: Make size dynamic depending on plant type
-        width: constraints.maxHeight,
-        height: constraints.maxWidth,
-        child: Stack(children: [
-          Positioned(left: 20, top: 50, child: PlantBox(id: widget.id)),
-          Positioned(
-            bottom: 10,
-            child:
-                Pot(plantData: ref.watch(plantDataProvider(widget.id))),
-          ),
-        ]));
-          },
-        ));
+      }
+    }, child: LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return SizedBox(
+            // This part's a little fucked with the positioning
+            // TODO: Make size dynamic depending on plant type
+            width: constraints.maxHeight,
+            height: constraints.maxWidth,
+            child: Column(children: [
+              PlantBox(id: widget.id),
+              Pot(plantData: ref.watch(plantDataProvider(widget.id))),
+            ]));
+      },
+    ));
   }
 
   @override
