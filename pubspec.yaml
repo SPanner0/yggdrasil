@@ -70,6 +70,7 @@ flutter:
      - assets/images/pot.png
      - assets/images/table.jpg
      - assets/images/plants/none.png
+     - assets/images/plants/dead.png
      - assets/images/plants/sprout.png
      - assets/images/plants/cactus.png
      - assets/images/plants/mushroom.png

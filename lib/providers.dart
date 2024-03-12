@@ -30,15 +30,77 @@ class GameData {
     _day++;
   }
 }
-final plantDataProvider = Provider.family<PlantData, int>((ref, id) {
-  return PlantData(
+
+final plantDataProvider =
+    StateNotifierProvider.family<PlantDataNotifier, PlantData, int>((ref, id) {
+  return PlantDataNotifier(PlantData(
       id: id,
       plantType: PlantType.none,
       plantStage: 0,
       water: 0,
       sunshine: 0,
-      dayCounter: 0);
+      dayCounter: 0));
 });
+
+class PlantDataNotifier extends StateNotifier<PlantData> {
+  PlantDataNotifier(super.state);
+
+  int get id => state.id;
+  PlantType get plantType => state.plantType;
+  int get plantStage => state.plantStage;
+  int get water => state.water;
+  int get sunshine => state.sunshine;
+  int get dayCounter => state.dayCounter;
+
+  void setPlantType(PlantType type) {
+    PlantData newState = state.clone();
+    newState.setPlantType(type);
+    state = newState;
+  }
+
+  void setPlantStage(int stage) {
+    PlantData newState = state.clone();
+    newState.setPlantStage(stage);
+    state = newState;
+  }
+
+  void addWater(int amount) {
+    PlantData newState = state.clone();
+    newState.addWater(amount);
+    state = newState;
+  }
+
+  void resetWater() {
+    PlantData newState = state.clone();
+    newState.resetWater();
+    state = newState;
+  }
+
+  void setSunshine(int amount) {
+    PlantData newState = state.clone();
+    newState.setSunshine(amount);
+    state = newState;
+  }
+
+  void nextDay() {
+    PlantData newState = state.clone();
+    newState.nextDay();
+    state = newState;
+  }
+
+  void killPlant() {
+    PlantData newState = state.clone();
+    newState.killPlant();
+    state = newState;
+  }
+
+  int sellPlant() {
+    PlantData newState = state.clone();
+    int sellPrice = newState.sellPlant();
+    state = newState;
+    return sellPrice;
+  }
+}
 
 /// Contains plant data such as type and stage of grow
 class PlantData {
@@ -82,23 +144,31 @@ class PlantData {
     _water += amount;
   }
 
+  void resetWater() {
+    _water = 0;
+  }
+
   void setSunshine(int amount) {
     _sunshine = amount;
   }
 
   void nextDay() {
+    print('Next day...');
     _dayCounter++;
-    if ((plantType != PlantType.none && plantStage != -1) || (plantStage > 1)) {
+    if ((plantType != PlantType.none && plantStage != -1) || (plantStage < 2)) {
+      print("Checking plant growth");
       if (plantType.waterNeeded! != water) {
+        print("Not enough water");
         killPlant();
-      }
-      if (plantType.sunshineNeeded! > sunshine + 10 ||
-          plantType.sunshineNeeded! < sunshine - 10) {
+      } else if (plantType.sunshineNeeded! > sunshine + 2 ||
+          plantType.sunshineNeeded! < sunshine - 2) {
+        print("Wrong amount of sunshine");
         killPlant();
-      }
-      if (plantType.growthTime! == dayCounter) {
+      } else if (plantType.growthTime! == dayCounter) {
+        print("Plant has grown");
         setPlantStage(plantStage + 1);
       }
+      resetWater();
     }
   }
 
@@ -118,5 +188,15 @@ class PlantData {
     _sunshine = 0;
     _dayCounter = 0;
     return price;
+  }
+
+  PlantData clone() {
+    return PlantData(
+        id: _id,
+        plantType: _plantType,
+        plantStage: _plantStage,
+        water: _water,
+        sunshine: _sunshine,
+        dayCounter: _dayCounter);
   }
 }

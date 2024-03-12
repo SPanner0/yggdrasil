@@ -23,16 +23,24 @@ class _GamePageState extends ConsumerState<GamePage> with RestorationMixin {
         appBar: AppBar(title: const Text("Yggdrasil")),
         body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-          return Column(children: [
+          return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
             ElevatedButton(
                 onPressed: () {
-                  ref.watch(gameDataProvider).addCoins(10);
+                  setState(() {
+                    ref.watch(gameDataProvider).addCoins(10);
+                  });
                 },
                 child: Text("Coins: ${ref.watch(gameDataProvider).coins}")),
             ElevatedButton(
                 onPressed: () {
                   setState(() {
                     ref.watch(gameDataProvider).incrementDay();
+                    ref.watch(plantDataProvider(1).notifier).nextDay();
+                    ref.watch(plantDataProvider(2).notifier).nextDay();
+                    ref.watch(plantDataProvider(3).notifier).nextDay();
                   });
                 },
                 child: Text("Day: ${ref.watch(gameDataProvider).day}")),
@@ -41,14 +49,15 @@ class _GamePageState extends ConsumerState<GamePage> with RestorationMixin {
               height: constraints.maxHeight * 0.6,
               child: Image.asset("assets/images/window.jpg"),
             ),
-            const Row(
+            const Expanded(child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  PottedPlant(1),
-                  PottedPlant(2),
-                  PottedPlant(3),
+                  Expanded(child: PottedPlant(1)),
+                  Expanded(child: PottedPlant(2)),
+                  Expanded(child: PottedPlant(3)),
                 ])
-          ]);
+          )]);
         }));
   }
 
@@ -80,59 +89,51 @@ class _PottedPlantState extends ConsumerState<PottedPlant>
   final RestorableInt restorableSunshine = RestorableInt(0);
   final RestorableInt restorableDayCounter = RestorableInt(0);
 
-  double _currentSunshineSlider = 5.0;
-
   @override
   Widget build(BuildContext context) {
-    final PlantData plantData = ref.read(plantDataProvider(widget.id));
-
-    return GestureDetector(
-        onTap: () async {
-          if (plantData.plantType != PlantType.none) {
-            // We want the user to be able to grow their plant if it exists
-            // TODO: Add popup menu for plant growth logic
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return Dialog(child: GrowthPanel(id: widget.id));
-                });
+    return GestureDetector(onTap: () async {
+          if (ref.watch(plantDataProvider(widget.id).notifier).plantType !=
+      PlantType.none) {
+    // We want the user to be able to grow their plant if it exists
+    // TODO: Add popup menu for plant growth logic
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(child: GrowthPanel(id: widget.id));
+        });
           } else {
-            // and to buy a plant if it doesn't
-            final PlantType purchasedPlant = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ShopPage(coins: ref.read(gameDataProvider).coins)));
-            setState(() {
-              ref.watch(gameDataProvider).subtractCoins(purchasedPlant.price!);
-              plantData.setPlantType(purchasedPlant);
-              plantData.setPlantStage(1);
-            });
+    // and to buy a plant if it doesn't
+    final PlantType purchasedPlant = await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ShopPage(
+                    coins: ref.read(gameDataProvider).coins))) ??
+        PlantType.none;
+    setState(() {
+      ref.watch(gameDataProvider).subtractCoins(purchasedPlant.price!);
+      ref
+          .watch(plantDataProvider(widget.id).notifier)
+          .setPlantType(purchasedPlant);
+      ref.watch(plantDataProvider(widget.id).notifier).setPlantStage(1);
+    });
           }
-        },
-        child: SizedBox(
-            // This part's a little fucked with the positioning
-            // TODO: Make size dynamic depending on plant type
-            width: 150,
-            height: 200,
-            child: Stack(children: [
-              Positioned(
-                  left: 20,
-                  top: 50,
-                  child: PlantBox(
-                    plantType: plantData.plantType,
-                    plantStage: plantData.plantStage,
-                  )),
-              Positioned(
-                bottom: 10,
-                child: Pot(plantData: plantData),
-              ),
-              Builder(builder: (BuildContext context) {
-                ref.watch(gameDataProvider).day;
-
-                return const SizedBox.shrink();
-              }),
-            ])));
+        }, child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+    return SizedBox(
+        // This part's a little fucked with the positioning
+        // TODO: Make size dynamic depending on plant type
+        width: constraints.maxHeight,
+        height: constraints.maxWidth,
+        child: Stack(children: [
+          Positioned(left: 20, top: 50, child: PlantBox(id: widget.id)),
+          Positioned(
+            bottom: 10,
+            child:
+                Pot(plantData: ref.watch(plantDataProvider(widget.id))),
+          ),
+        ]));
+          },
+        ));
   }
 
   @override
@@ -157,47 +158,81 @@ class GrowthPanel extends ConsumerStatefulWidget {
 }
 
 class _GrowthPanelState extends ConsumerState<GrowthPanel> {
-  double _currentSunshineSlider = 5.0;
+  double _currentSunshineSlider = 0;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: [
-      ElevatedButton(
-          onPressed: () {
-            ref.read(plantDataProvider(widget.id)).addWater(1);
-            Navigator.pop(context);
+    _currentSunshineSlider =
+        ref.watch(plantDataProvider(widget.id).notifier).sunshine.toDouble();
+
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+        IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.close))
+      ]),
+      Card(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+        ListTile(
+            leading: const Icon(Icons.water_drop),
+            title: const Text("Water your plant"),
+            subtitle: Text(
+                "Current water: ${ref.watch(plantDataProvider(widget.id).notifier).water}")),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    ref.read(plantDataProvider(widget.id).notifier).addWater(1);
+                  });
+                },
+                child: const Text("Water")),
+          ],
+        ),
+      ])),
+      Card(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+        ListTile(
+            leading: const Icon(Icons.wb_sunny),
+            title: const Text("Give your plant some sunshine"),
+            subtitle: Text(
+                "Current sunshine: ${ref.watch(plantDataProvider(widget.id).notifier).sunshine}")),
+        Slider(
+          value: _currentSunshineSlider,
+          min: 0,
+          max: 10,
+          divisions: 10,
+          label: _currentSunshineSlider.round().toString(),
+          onChanged: (double value) {
+            _currentSunshineSlider = value;
+            setState(() {
+              ref
+                  .watch(plantDataProvider(widget.id).notifier)
+                  .setSunshine(value.toInt());
+            });
           },
-          child: const Text("Water")),
-      Slider(
-        value: _currentSunshineSlider,
-        min: 0,
-        max: 10,
-        divisions: 10,
-        label: _currentSunshineSlider.round().toString(),
-        onChanged: (double value) {
-          ref.watch(plantDataProvider(widget.id)).setSunshine(value.toInt());
-        },
-      ),
+        ),
+      ])),
     ]);
   }
 }
 
 /// Contains a plant and all the logic needed to determine plant type, stage of grow, etc.
-class PlantBox extends StatefulWidget {
-  final PlantType plantType;
-  final int plantStage;
-
-  const PlantBox(
-      {super.key, required this.plantType, required this.plantStage});
+class PlantBox extends ConsumerStatefulWidget {
+  final int id;
+  const PlantBox({super.key, required this.id});
 
   @override
-  State<PlantBox> createState() => _PlantBoxState();
+  ConsumerState<PlantBox> createState() => _PlantBoxState();
 }
 
-class _PlantBoxState extends State<PlantBox> {
+class _PlantBoxState extends ConsumerState<PlantBox> {
   @override
   Widget build(BuildContext context) {
-    switch (widget.plantStage) {
+    switch (ref.watch(plantDataProvider(widget.id).notifier).plantStage) {
       case -1:
         return Image.asset("assets/images/plants/dead.png");
       case 0:
@@ -205,7 +240,10 @@ class _PlantBoxState extends State<PlantBox> {
       case 1:
         return Image.asset("assets/images/plants/sprout.png");
       default:
-        return Image.asset(widget.plantType.imagePath!);
+        return Image.asset(ref
+            .watch(plantDataProvider(widget.id).notifier)
+            .plantType
+            .imagePath!);
     }
   }
 }

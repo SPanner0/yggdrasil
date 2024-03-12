@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'home.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Yggdrasil',
       theme: appTheme,
       home: const HomePage(),
@@ -23,7 +25,8 @@ class MyApp extends StatelessWidget {
 
 final ThemeData appTheme = ThemeData(
   primaryColor: const Color(0xFF7CB342), // Green
-  colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF7CB342), brightness: Brightness.dark),
+  colorScheme: ColorScheme.fromSeed(
+      seedColor: const Color(0xFF7CB342), brightness: Brightness.dark),
   splashColor: const Color(0xFFF07167), // Light pink
   scaffoldBackgroundColor: Colors.teal, // Light gray
 
