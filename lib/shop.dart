@@ -20,7 +20,7 @@ class ShopPage extends StatelessWidget {
         }
         return Column(children: [
           ElevatedButton(
-              onPressed: () => {}, child: Text("Coins: $coins")),
+              onPressed: () => {}, child: Text("🪙 $coins")),
           Expanded(
               child: GridView.count(
             crossAxisCount: 2,

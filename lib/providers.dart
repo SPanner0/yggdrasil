@@ -88,6 +88,12 @@ class PlantDataNotifier extends StateNotifier<PlantData> {
     state = newState;
   }
 
+  void newPlant(PlantType type) {
+    PlantData newState = state.clone();
+    newState.newPlant(type);
+    state = newState;
+  }
+
   void killPlant() {
     PlantData newState = state.clone();
     newState.killPlant();
@@ -153,23 +159,30 @@ class PlantData {
   }
 
   void nextDay() {
-    print('Next day...');
     _dayCounter++;
     if ((plantType != PlantType.none && plantStage != -1) || (plantStage < 2)) {
-      print("Checking plant growth");
       if (plantType.waterNeeded! != water) {
-        print("Not enough water");
         killPlant();
       } else if (plantType.sunshineNeeded! > sunshine + 2 ||
           plantType.sunshineNeeded! < sunshine - 2) {
-        print("Wrong amount of sunshine");
         killPlant();
-      } else if (plantType.growthTime! == dayCounter) {
-        print("Plant has grown");
+      } else if (dayCounter >= plantType.growthTime!) {
         setPlantStage(plantStage + 1);
       }
       resetWater();
     }
+  }
+
+  void newPlant(PlantType type) {
+    if (type == PlantType.none) {
+      _plantStage = 0;
+    } else {
+      _plantStage = 1;
+    }
+    _plantType = type;
+    _water = 0;
+    _sunshine = 0;
+    _dayCounter = 0;
   }
 
   void killPlant() {

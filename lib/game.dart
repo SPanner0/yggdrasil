@@ -34,7 +34,7 @@ class _GamePageState extends ConsumerState<GamePage> with RestorationMixin {
                         ref.watch(gameDataProvider).addCoins(10);
                       });
                     },
-                    child: Text("Coins: ${ref.watch(gameDataProvider).coins}")),
+                    child: Text("🪙 ${ref.watch(gameDataProvider).coins}")),
                 ElevatedButton(
                     onPressed: () {
                       setState(() {
@@ -44,7 +44,7 @@ class _GamePageState extends ConsumerState<GamePage> with RestorationMixin {
                         ref.watch(plantDataProvider(3).notifier).nextDay();
                       });
                     },
-                    child: Text("Day: ${ref.watch(gameDataProvider).day}")),
+                    child: Text("Day ${ref.watch(gameDataProvider).day}")),
                 SizedBox(
                   width: constraints.maxWidth,
                   height: constraints.maxHeight * 0.6,
@@ -115,8 +115,7 @@ class _PottedPlantState extends ConsumerState<PottedPlant>
           ref.watch(gameDataProvider).subtractCoins(purchasedPlant.price!);
           ref
               .watch(plantDataProvider(widget.id).notifier)
-              .setPlantType(purchasedPlant);
-          ref.watch(plantDataProvider(widget.id).notifier).setPlantStage(1);
+              .newPlant(purchasedPlant);
         });
       }
     }, child: LayoutBuilder(
