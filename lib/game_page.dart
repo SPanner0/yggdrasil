@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'plants.dart';
 import 'providers.dart';
-import 'shop.dart';
+import 'shop_page.dart';
 
 /// The main game page
 class GamePage extends ConsumerStatefulWidget {
@@ -31,20 +31,14 @@ class _GamePageState extends ConsumerState<GamePage> with RestorationMixin {
                 ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        ref.watch(gameDataProvider).addCoins(10);
-                      });
-                    },
-                    child: Text("🪙 ${ref.watch(gameDataProvider).coins}")),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        ref.watch(gameDataProvider).incrementDay();
+                        ref.watch(gameDataProvider.notifier).incrementDay();
+                        // We might want to make this more extendable in the future
                         ref.watch(plantDataProvider(1).notifier).nextDay();
                         ref.watch(plantDataProvider(2).notifier).nextDay();
                         ref.watch(plantDataProvider(3).notifier).nextDay();
                       });
                     },
-                    child: Text("Day ${ref.watch(gameDataProvider).day}")),
+                    child: Text("Day ${ref.watch(gameDataProvider.notifier).day}")),
                 SizedBox(
                   width: constraints.maxWidth,
                   height: constraints.maxHeight * 0.6,
@@ -94,10 +88,41 @@ class _PottedPlantState extends ConsumerState<PottedPlant>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(onTap: () async {
-      if (ref.watch(plantDataProvider(widget.id).notifier).plantType !=
+        if (ref.watch(plantDataProvider(widget.id).notifier).plantStage > 1) {
+            final bool choice = await showDialog(
+                context: context,
+                builder: (context) {
+                    return AlertDialog(
+                        title: const Text("Harvest your plant?"),
+                        content: const Text(
+                            "You can harvest your plant and sell it for coins."),
+                        actions: [
+                            TextButton(
+                                onPressed: () {
+                                    Navigator.pop(context, true);
+                                },
+                                child: const Text("Harvest")),
+                            TextButton(
+                                onPressed: () {
+                                    Navigator.pop(context, false);
+                                },
+                                child: const Text("Cancel")),
+                        ]);
+                }) ??
+                false;
+
+            if (choice) {
+                ref.watch(gameDataProvider.notifier).addCoins(
+                    ref
+                        .watch(plantDataProvider(widget.id).notifier)
+                        .plantType
+                        .sellPrice);
+                ref.watch(plantDataProvider(widget.id).notifier).sellPlant();
+            }
+        }
+      else if (ref.watch(plantDataProvider(widget.id).notifier).plantType !=
           PlantType.none) {
         // We want the user to be able to grow their plant if it exists
-        // TODO: Add popup menu for plant growth logic
         showDialog(
             context: context,
             builder: (context) {
@@ -109,10 +134,10 @@ class _PottedPlantState extends ConsumerState<PottedPlant>
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        ShopPage(coins: ref.read(gameDataProvider).coins))) ??
+                        ShopPage(coins: ref.read(gameDataProvider.notifier).coins))) ??
             PlantType.none;
         setState(() {
-          ref.watch(gameDataProvider).subtractCoins(purchasedPlant.price!);
+          ref.watch(gameDataProvider.notifier).subtractCoins(purchasedPlant.price!);
           ref
               .watch(plantDataProvider(widget.id).notifier)
               .newPlant(purchasedPlant);
@@ -122,7 +147,6 @@ class _PottedPlantState extends ConsumerState<PottedPlant>
       builder: (BuildContext context, BoxConstraints constraints) {
         return SizedBox(
             // This part's a little fucked with the positioning
-            // TODO: Make size dynamic depending on plant type
             width: constraints.maxHeight,
             height: constraints.maxWidth,
             child: Column(children: [

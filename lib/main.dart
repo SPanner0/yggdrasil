@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'home.dart';
+import 'home_page.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -33,27 +33,27 @@ final ThemeData appTheme = ThemeData(
   textTheme: TextTheme(
     headlineLarge: GoogleFonts.montserrat(
       fontSize: 32.0,
-      color: const Color(0xFF333333), // Dark gray
+      color: Colors.white70, // Dark gray
     ),
     headlineMedium: GoogleFonts.montserrat(
       fontSize: 24.0,
-      color: const Color(0xFF333333), // Dark gray
+      color: Colors.white70, // Dark gray
     ),
     headlineSmall: GoogleFonts.montserrat(
       fontSize: 20.0,
-      color: const Color(0xFF333333), // Dark gray
+      color: Colors.white70, // Dark gray
     ),
     bodyLarge: GoogleFonts.openSans(
       fontSize: 16.0,
-      color: const Color(0xFF333333), // Dark gray
+      color: Colors.white70, // Dark gray
     ),
     bodyMedium: GoogleFonts.openSans(
       fontSize: 14.0,
-      color: const Color(0xFF333333), // Dark gray
+      color: Colors.white70, // Dark gray
     ),
     bodySmall: GoogleFonts.openSans(
       fontSize: 12.0,
-      color: const Color(0xFF333333), // Dark gray
+      color: Colors.white70, // Dark gray
     ),
   ),
 

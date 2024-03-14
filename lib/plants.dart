@@ -9,26 +9,30 @@ final Map<PlantType, String> plantNames = {
   PlantType.none: "None",
   PlantType.cactus: "Cactus",
   PlantType.mushroom: "Mushroom",
-  PlantType.sunflower: "Orchid",
+  PlantType.sunflower: "Sunflower",
 };
 
 extension PlantName on PlantType {
-    String? get name {
-        return plantNames[this];
-    }
+  String get name {
+    String nameString = toString().split('.').last;
+    return "${nameString[0].toUpperCase()}${nameString.substring(1).toLowerCase()}";
+  }
 }
 
 final Map<PlantType, String> plantDescriptions = {
   PlantType.none: "No plant",
-  PlantType.cactus: "A cactus is a member of the plant family Cactaceae, a family comprising about 127 genera with some 1750 known species of the order Caryophyllales.",
-  PlantType.mushroom: "A mushroom is the fleshy, spore-bearing fruiting body of a fungus, typically produced above ground, on soil, or on its food source.",
-  PlantType.sunflower: "The Orchidaceae are a diverse and widespread family of flowering plants, with blooms that are often colourful and fragrant, commonly known as the orchid family.",
+  PlantType.cactus:
+      "A cactus is a member of the plant family Cactaceae, a family comprising about 127 genera with some 1750 known species of the order Caryophyllales.",
+  PlantType.mushroom:
+      "A mushroom is the fleshy, spore-bearing fruiting body of a fungus, typically produced above ground, on soil, or on its food source.",
+  PlantType.sunflower:
+      "The Orchidaceae are a diverse and widespread family of flowering plants, with blooms that are often colourful and fragrant, commonly known as the orchid family.",
 };
 
 extension PlantDescription on PlantType {
-    String? get description {
-        return plantDescriptions[this];
-    }
+  String? get description {
+    return plantDescriptions[this];
+  }
 }
 
 final Map<PlantType, String> plantImagePath = {
@@ -39,9 +43,9 @@ final Map<PlantType, String> plantImagePath = {
 };
 
 extension PlantImagePath on PlantType {
-    String? get imagePath {
-        return plantImagePath[this];
-    }
+  String? get imagePath {
+    return plantImagePath[this];
+  }
 }
 
 final Map<PlantType, int> plantPrices = {
@@ -52,22 +56,29 @@ final Map<PlantType, int> plantPrices = {
 };
 
 extension PlantPrice on PlantType {
-    int? get price {
-        return plantPrices[this];
-    }
+  int? get price {
+    return plantPrices[this];
+  }
+}
+
+extension PlantSellPrice on PlantType {
+  int get sellPrice {
+    return (price! * 1.5).round();
+  }
 }
 
 final Map<PlantType, int> plantGrowthTime = {
-  PlantType.none: 0,
+  PlantType.none:
+      0x7FFFFFFFFFFFFFFF, // None takes a very long time to grow to avoid unexpected behavior
   PlantType.cactus: 1,
   PlantType.mushroom: 3,
   PlantType.sunflower: 5,
 };
 
 extension PlantGrowthTime on PlantType {
-    int? get growthTime {
-        return plantGrowthTime[this];
-    }
+  int? get growthTime {
+    return plantGrowthTime[this];
+  }
 }
 
 final Map<PlantType, int> plantWaterNeeded = {
@@ -78,9 +89,9 @@ final Map<PlantType, int> plantWaterNeeded = {
 };
 
 extension PlantWaterNeeded on PlantType {
-    int? get waterNeeded {
-        return plantWaterNeeded[this];
-    }
+  int? get waterNeeded {
+    return plantWaterNeeded[this];
+  }
 }
 
 final Map<PlantType, int> plantSunshineNeeded = {
@@ -91,7 +102,7 @@ final Map<PlantType, int> plantSunshineNeeded = {
 };
 
 extension PlantSunshineNeeded on PlantType {
-    int? get sunshineNeeded {
-        return plantSunshineNeeded[this];
-    }
+  int? get sunshineNeeded {
+    return plantSunshineNeeded[this];
+  }
 }

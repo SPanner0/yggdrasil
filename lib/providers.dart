@@ -2,9 +2,34 @@ import 'package:riverpod/riverpod.dart';
 
 import 'plants.dart';
 
-final gameDataProvider = Provider<GameData>((ref) {
-  return GameData(coins: 100, day: 0);
+final gameDataProvider = StateNotifierProvider<GameDataNotifier, GameData>((ref) {
+    return GameDataNotifier(GameData(coins: 100, day: 0));
 });
+
+class GameDataNotifier extends StateNotifier<GameData> {
+  GameDataNotifier(super.state);
+
+  int get coins => state.coins;
+  int get day => state.day;
+
+  void addCoins(int amount) {
+    GameData newState = state.clone();
+    newState.addCoins(amount);
+    state = newState;
+  }
+
+  void subtractCoins(int amount) {
+    GameData newState = state.clone();
+    newState.subtractCoins(amount);
+    state = newState;
+  }
+
+  void incrementDay() {
+    GameData newState = state.clone();
+    newState.incrementDay();
+    state = newState;
+  }
+}
 
 /// Contains game data, such as coins and day
 class GameData {
@@ -24,10 +49,17 @@ class GameData {
 
   void subtractCoins(int amount) {
     _coins -= amount;
+    if (_coins < 10) {
+      _coins = 10;
+    }
   }
 
   void incrementDay() {
     _day++;
+  }
+
+  GameData clone() {
+    return GameData(coins: _coins, day: _day);
   }
 }
 
@@ -160,7 +192,7 @@ class PlantData {
 
   void nextDay() {
     _dayCounter++;
-    if ((plantType != PlantType.none && plantStage != -1) || (plantStage < 2)) {
+    if ((plantType != PlantType.none && plantStage != -1) && (plantStage < 2)) {
       if (plantType.waterNeeded! != water) {
         killPlant();
       } else if (plantType.sunshineNeeded! > sunshine + 2 ||
