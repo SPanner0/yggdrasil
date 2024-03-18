@@ -3,14 +3,9 @@ enum PlantType {
   cactus,
   mushroom,
   sunflower,
+  rose,
+  bonsai,
 }
-
-final Map<PlantType, String> plantNames = {
-  PlantType.none: "None",
-  PlantType.cactus: "Cactus",
-  PlantType.mushroom: "Mushroom",
-  PlantType.sunflower: "Sunflower",
-};
 
 extension PlantName on PlantType {
   String get name {
@@ -26,7 +21,11 @@ final Map<PlantType, String> plantDescriptions = {
   PlantType.mushroom:
       "A mushroom is the fleshy, spore-bearing fruiting body of a fungus, typically produced above ground, on soil, or on its food source.",
   PlantType.sunflower:
-      "The Orchidaceae are a diverse and widespread family of flowering plants, with blooms that are often colourful and fragrant, commonly known as the orchid family.",
+      "The sunflower is an annual plant in the family Asteraceae, with a large flower head.",
+  PlantType.rose:
+      "A rose is a woody perennial flowering plant of the genus Rosa, in the family Rosaceae, or the flower it bears.",
+  PlantType.bonsai:
+      "A bonsai is a small tree or shrub grown in a shallow pot. The goal of growing a Bonsai is to create a miniaturized but realistic representation of nature in the form of a tree.",
 };
 
 extension PlantDescription on PlantType {
@@ -40,6 +39,8 @@ final Map<PlantType, String> plantImagePath = {
   PlantType.cactus: "assets/images/plants/cactus.png",
   PlantType.mushroom: "assets/images/plants/mushroom.png",
   PlantType.sunflower: "assets/images/plants/sunflower.png",
+  PlantType.rose: "assets/images/plants/rose.png",
+  PlantType.bonsai: "assets/images/plants/bonsai.png",
 };
 
 extension PlantImagePath on PlantType {
@@ -53,6 +54,8 @@ final Map<PlantType, int> plantPrices = {
   PlantType.cactus: 10,
   PlantType.mushroom: 20,
   PlantType.sunflower: 30,
+  PlantType.rose: 50,
+  PlantType.bonsai: 100,
 };
 
 extension PlantPrice on PlantType {
@@ -71,8 +74,10 @@ final Map<PlantType, int> plantGrowthTime = {
   PlantType.none:
       0x7FFFFFFFFFFFFFFF, // None takes a very long time to grow to avoid unexpected behavior
   PlantType.cactus: 1,
-  PlantType.mushroom: 3,
-  PlantType.sunflower: 5,
+  PlantType.mushroom: 2,
+  PlantType.sunflower: 3,
+  PlantType.rose: 5,
+  PlantType.bonsai: 7,
 };
 
 extension PlantGrowthTime on PlantType {
@@ -84,8 +89,10 @@ extension PlantGrowthTime on PlantType {
 final Map<PlantType, int> plantWaterNeeded = {
   PlantType.none: 0,
   PlantType.cactus: 0,
-  PlantType.mushroom: 1,
+  PlantType.mushroom: 2,
   PlantType.sunflower: 2,
+  PlantType.rose: 3,
+  PlantType.bonsai: 5,
 };
 
 extension PlantWaterNeeded on PlantType {
@@ -99,6 +106,8 @@ final Map<PlantType, int> plantSunshineNeeded = {
   PlantType.cactus: 5,
   PlantType.mushroom: 2,
   PlantType.sunflower: 7,
+  PlantType.rose: 6,
+  PlantType.bonsai: 4,
 };
 
 extension PlantSunshineNeeded on PlantType {

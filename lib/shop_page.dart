@@ -19,8 +19,7 @@ class ShopPage extends StatelessWidget {
           shopItems.add(ShopItem(plantType: plant, coins: coins));
         }
         return Column(children: [
-          ElevatedButton(
-              onPressed: () => {}, child: Text("🪙 $coins")),
+          ElevatedButton(onPressed: () => {}, child: Text("🪙 $coins")),
           Expanded(
               child: GridView.count(
             crossAxisCount: 2,
@@ -43,7 +42,7 @@ class ShopItem extends StatelessWidget {
     return InkWell(
       onTap: () {
         // TODO: Figure out shop logic
-        if (coins>= plantType.price!) {
+        if (coins >= plantType.price!) {
           Navigator.pop(context, plantType);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

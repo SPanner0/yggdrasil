@@ -241,7 +241,7 @@ class _GrowthPanelState extends ConsumerState<GrowthPanel> {
   }
 }
 
-/// Contains a plant and all the logic needed to determine plant type, stage of grow, etc.
+/// Contains a plant and all the logic needed to determine plant type, stage of growth, etc.
 class PlantBox extends ConsumerStatefulWidget {
   final int id;
   const PlantBox({super.key, required this.id});
