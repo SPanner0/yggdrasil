@@ -169,6 +169,7 @@ class _PottedPlantState extends ConsumerState<PottedPlant>
   }
 }
 
+/// A popup panel that allows the user to water and give sunshine to their plant
 class GrowthPanel extends ConsumerStatefulWidget {
   final int id;
   const GrowthPanel({super.key, required this.id});

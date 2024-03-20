@@ -17,15 +17,15 @@ extension PlantName on PlantType {
 final Map<PlantType, String> plantDescriptions = {
   PlantType.none: "No plant",
   PlantType.cactus:
-      "A cactus is a member of the plant family Cactaceae, a family comprising about 127 genera with some 1750 known species of the order Caryophyllales.",
+      "A prickly plant found in the desert. It is known for its ability to store water and survive in extremely dry conditions. Be sure to not give it a hug!",
   PlantType.mushroom:
-      "A mushroom is the fleshy, spore-bearing fruiting body of a fungus, typically produced above ground, on soil, or on its food source.",
+      "A fleshy, spore-bearing fruiting body of a fungus, typically produced above ground, on soil, or on its food source.",
   PlantType.sunflower:
-      "The sunflower is an annual plant in the family Asteraceae, with a large flower head.",
+      "A friendly-looking flower that is known for its ability to follow the sun. Having it in your house will surely boost your mood!",
   PlantType.rose:
-      "A rose is a woody perennial flowering plant of the genus Rosa, in the family Rosaceae, or the flower it bears.",
+      "A red rose is an unmistakable expression of love. Red roses convey deep emotions - be it love, longing or desire. Red Roses can also be used to convey respect, admiration or devotion.",
   PlantType.bonsai:
-      "A bonsai is a small tree or shrub grown in a shallow pot. The goal of growing a Bonsai is to create a miniaturized but realistic representation of nature in the form of a tree.",
+      "A small tree or shrub grown in a shallow pot. The goal of growing a Bonsai is to create a miniaturized but realistic representation of nature in the form of a tree.",
 };
 
 extension PlantDescription on PlantType {
