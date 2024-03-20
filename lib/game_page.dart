@@ -38,7 +38,7 @@ class _GamePageState extends ConsumerState<GamePage> with RestorationMixin {
                         ref.watch(plantDataProvider(3).notifier).nextDay();
                       });
                     },
-                    child: Text("Day ${ref.watch(gameDataProvider.notifier).day}")),
+                    child: Text("Next Day")),
                 SizedBox(
                   width: constraints.maxWidth,
                   height: constraints.maxHeight * 0.6,
