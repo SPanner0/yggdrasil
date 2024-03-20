@@ -34,7 +34,7 @@ class PlantCard extends StatelessWidget {
             subtitle: Text("🪙 ${plantType.price}"),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(16.0),
             child: Text(
               "${plantType.description}",
             ),
