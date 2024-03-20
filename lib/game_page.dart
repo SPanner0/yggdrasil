@@ -88,39 +88,37 @@ class _PottedPlantState extends ConsumerState<PottedPlant>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(onTap: () async {
-        if (ref.watch(plantDataProvider(widget.id).notifier).plantStage > 1) {
-            final bool choice = await showDialog(
+      if (ref.watch(plantDataProvider(widget.id).notifier).plantStage > 1) {
+        final bool choice = await showDialog(
                 context: context,
                 builder: (context) {
-                    return AlertDialog(
-                        title: const Text("Harvest your plant?"),
-                        content: const Text(
-                            "You can harvest your plant and sell it for coins."),
-                        actions: [
-                            TextButton(
-                                onPressed: () {
-                                    Navigator.pop(context, true);
-                                },
-                                child: const Text("Harvest")),
-                            TextButton(
-                                onPressed: () {
-                                    Navigator.pop(context, false);
-                                },
-                                child: const Text("Cancel")),
-                        ]);
+                  return AlertDialog(
+                      title: const Text("Harvest your plant?"),
+                      content: const Text(
+                          "You can harvest your plant and sell it for coins."),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                            child: const Text("Harvest")),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, false);
+                            },
+                            child: const Text("Cancel")),
+                      ]);
                 }) ??
-                false;
+            false;
 
-            if (choice) {
-                ref.watch(gameDataProvider.notifier).addCoins(
-                    ref
-                        .watch(plantDataProvider(widget.id).notifier)
-                        .plantType
-                        .sellPrice);
-                ref.watch(plantDataProvider(widget.id).notifier).sellPlant();
-            }
+        if (choice) {
+          ref.watch(gameDataProvider.notifier).addCoins(ref
+              .watch(plantDataProvider(widget.id).notifier)
+              .plantType
+              .sellPrice);
+          ref.watch(plantDataProvider(widget.id).notifier).sellPlant();
         }
-      else if (ref.watch(plantDataProvider(widget.id).notifier).plantType !=
+      } else if (ref.watch(plantDataProvider(widget.id).notifier).plantType !=
           PlantType.none) {
         // We want the user to be able to grow their plant if it exists
         showDialog(
@@ -133,11 +131,13 @@ class _PottedPlantState extends ConsumerState<PottedPlant>
         final PlantType purchasedPlant = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ShopPage(coins: ref.read(gameDataProvider.notifier).coins))) ??
+                    builder: (context) => ShopPage(
+                        coins: ref.read(gameDataProvider.notifier).coins))) ??
             PlantType.none;
         setState(() {
-          ref.watch(gameDataProvider.notifier).subtractCoins(purchasedPlant.price!);
+          ref
+              .watch(gameDataProvider.notifier)
+              .subtractCoins(purchasedPlant.price!);
           ref
               .watch(plantDataProvider(widget.id).notifier)
               .newPlant(purchasedPlant);
@@ -146,9 +146,8 @@ class _PottedPlantState extends ConsumerState<PottedPlant>
     }, child: LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         return SizedBox(
-            // This part's a little fucked with the positioning
-            width: constraints.maxHeight,
-            height: constraints.maxWidth,
+            width: constraints.maxWidth,
+            height: constraints.maxHeight * 0.8,
             child: Column(children: [
               PlantBox(id: widget.id),
               Pot(plantData: ref.watch(plantDataProvider(widget.id))),

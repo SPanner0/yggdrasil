@@ -72,7 +72,7 @@ extension PlantSellPrice on PlantType {
 
 final Map<PlantType, int> plantGrowthTime = {
   PlantType.none:
-      0x7FFFFFFFFFFFFFFF, // None takes a very long time to grow to avoid unexpected behavior
+      0x8000000000000000, // None takes a very long time to grow to avoid unexpected behavior
   PlantType.cactus: 1,
   PlantType.mushroom: 2,
   PlantType.sunflower: 3,
