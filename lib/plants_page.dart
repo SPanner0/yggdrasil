@@ -31,7 +31,7 @@ class PlantCard extends StatelessWidget {
           ListTile(
             leading: Image.asset(plantType.imagePath!),
             title: Text(plantType.name),
-            subtitle: Text("🪙 ${plantType.price}"),
+            subtitle: Text("🪙 ${plantType.price}\n💧 ${plantType.waterNeeded} ☀️ ${plantType.sunshineNeeded} 🕗 ${plantType.growthTime}"),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
