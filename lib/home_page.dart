@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:yggdrasil/game_page.dart';
 import 'package:yggdrasil/plants_page.dart';
 
+/// The home page of the app
+///
+/// This is the first page that the user sees when they open the app.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 

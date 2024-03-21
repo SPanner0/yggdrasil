@@ -2,8 +2,10 @@ import 'package:riverpod/riverpod.dart';
 
 import 'plants.dart';
 
-final gameDataProvider = StateNotifierProvider<GameDataNotifier, GameData>((ref) {
-    return GameDataNotifier(GameData(coins: 100, day: 0));
+/// Provides the game data and syncs it with the UI
+final gameDataProvider =
+    StateNotifierProvider<GameDataNotifier, GameData>((ref) {
+  return GameDataNotifier(GameData(coins: 100, day: 0));
 });
 
 class GameDataNotifier extends StateNotifier<GameData> {
@@ -63,6 +65,7 @@ class GameData {
   }
 }
 
+/// Provides the plant data and syncs it with the UI
 final plantDataProvider =
     StateNotifierProvider.family<PlantDataNotifier, PlantData, int>((ref, id) {
   return PlantDataNotifier(PlantData(

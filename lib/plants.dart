@@ -1,3 +1,4 @@
+/// Represents all the plants that can be grown in the game.
 enum PlantType {
   none,
   cactus,
@@ -8,13 +9,14 @@ enum PlantType {
 }
 
 extension PlantName on PlantType {
+  /// Returns the name of the plant with the first letter capitalized.
   String get name {
     String nameString = toString().split('.').last;
     return "${nameString[0].toUpperCase()}${nameString.substring(1).toLowerCase()}";
   }
 }
 
-final Map<PlantType, String> plantDescriptions = {
+final Map<PlantType, String> _plantDescriptions = {
   PlantType.none: "No plant",
   PlantType.cactus:
       "A prickly plant found in the desert. It is known for its ability to store water and survive in extremely dry conditions. Be sure to not give it a hug!",
@@ -29,12 +31,13 @@ final Map<PlantType, String> plantDescriptions = {
 };
 
 extension PlantDescription on PlantType {
+  /// Returns the description of the plant.
   String? get description {
-    return plantDescriptions[this];
+    return _plantDescriptions[this];
   }
 }
 
-final Map<PlantType, String> plantImagePath = {
+final Map<PlantType, String> _plantImagePath = {
   PlantType.none: "assets/images/plants/none.png",
   PlantType.cactus: "assets/images/plants/cactus.png",
   PlantType.mushroom: "assets/images/plants/mushroom.png",
@@ -44,12 +47,13 @@ final Map<PlantType, String> plantImagePath = {
 };
 
 extension PlantImagePath on PlantType {
+  /// Returns the file path of the plant image.
   String? get imagePath {
-    return plantImagePath[this];
+    return _plantImagePath[this];
   }
 }
 
-final Map<PlantType, int> plantPrices = {
+final Map<PlantType, int> _plantPrices = {
   PlantType.none: 0,
   PlantType.cactus: 10,
   PlantType.mushroom: 20,
@@ -59,18 +63,20 @@ final Map<PlantType, int> plantPrices = {
 };
 
 extension PlantPrice on PlantType {
+  /// Returns the price of the plant.
   int? get price {
-    return plantPrices[this];
+    return _plantPrices[this];
   }
 }
 
 extension PlantSellPrice on PlantType {
+  /// Returns the price of the plant when sold.
   int get sellPrice {
     return (price! * 1.5).round();
   }
 }
 
-final Map<PlantType, int> plantGrowthTime = {
+final Map<PlantType, int> _plantGrowthTime = {
   PlantType.none:
       0x8000000000000000, // None takes a very long time to grow to avoid unexpected behavior
   PlantType.cactus: 1,
@@ -81,12 +87,13 @@ final Map<PlantType, int> plantGrowthTime = {
 };
 
 extension PlantGrowthTime on PlantType {
+  /// Returns the time it takes for the plant to grow.
   int? get growthTime {
-    return plantGrowthTime[this];
+    return _plantGrowthTime[this];
   }
 }
 
-final Map<PlantType, int> plantWaterNeeded = {
+final Map<PlantType, int> _plantWaterNeeded = {
   PlantType.none: 0,
   PlantType.cactus: 0,
   PlantType.mushroom: 2,
@@ -96,12 +103,13 @@ final Map<PlantType, int> plantWaterNeeded = {
 };
 
 extension PlantWaterNeeded on PlantType {
+  /// Returns the amount of water the plant needs.
   int? get waterNeeded {
-    return plantWaterNeeded[this];
+    return _plantWaterNeeded[this];
   }
 }
 
-final Map<PlantType, int> plantSunshineNeeded = {
+final Map<PlantType, int> _plantSunshineNeeded = {
   PlantType.none: 0,
   PlantType.cactus: 5,
   PlantType.mushroom: 2,
@@ -111,7 +119,8 @@ final Map<PlantType, int> plantSunshineNeeded = {
 };
 
 extension PlantSunshineNeeded on PlantType {
+  /// Returns the amount of sunshine the plant needs.
   int? get sunshineNeeded {
-    return plantSunshineNeeded[this];
+    return _plantSunshineNeeded[this];
   }
 }

@@ -23,6 +23,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// The theming for the Yggdrasil app
+///
+/// Try to use this to set element themes instead of inlining them
 final ThemeData appTheme = ThemeData(
   primaryColor: const Color(0xFF7CB342), // Green
   colorScheme: ColorScheme.fromSeed(

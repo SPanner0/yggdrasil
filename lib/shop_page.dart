@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'plants.dart';
 
+/// The shop page
+///
+/// This is where the user can buy new plants
 class ShopPage extends StatelessWidget {
   final int coins;
   const ShopPage({super.key, required this.coins});
@@ -31,6 +34,7 @@ class ShopPage extends StatelessWidget {
   }
 }
 
+/// A single item in the shop
 class ShopItem extends StatelessWidget {
   final int coins;
   final PlantType plantType;
@@ -41,7 +45,6 @@ class ShopItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // TODO: Figure out shop logic
         if (coins >= plantType.price!) {
           Navigator.pop(context, plantType);
         } else {
@@ -52,7 +55,7 @@ class ShopItem extends StatelessWidget {
       child: Column(
         children: [
           Image.asset(plantType.imagePath!),
-          Text(plantType.name!),
+          Text(plantType.name),
           Text("Price: ${plantType.price!}"),
         ],
       ),
