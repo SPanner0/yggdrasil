@@ -97,16 +97,20 @@ class _PottedPlantState extends ConsumerState<PottedPlant>
                       content: const Text(
                           "You can harvest your plant and sell it for coins."),
                       actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context, true);
-                            },
-                            child: const Text("Harvest")),
-                        TextButton(
+                        ElevatedButton(
                             onPressed: () {
                               Navigator.pop(context, false);
                             },
                             child: const Text("Cancel")),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all(
+                                  Theme.of(context).primaryColor)),
+                          child: const Text("Harvest"),
+                        )
                       ]);
                 }) ??
             false;
