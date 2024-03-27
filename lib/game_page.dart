@@ -214,6 +214,9 @@ class _GrowthPanelState extends ConsumerState<GrowthPanel> {
                     ref.read(plantDataProvider(widget.id).notifier).addWater(1);
                   });
                 },
+                style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(
+                        Colors.cyan)),
                 child: const Text("Water")),
           ],
         ),

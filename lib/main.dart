@@ -31,8 +31,7 @@ final ThemeData appTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
       seedColor: const Color(0xFF7CB342), brightness: Brightness.dark),
   splashColor: const Color(0xFFF07167), // Light pink
-  scaffoldBackgroundColor: Colors.teal, // Light gray
-
+  scaffoldBackgroundColor: Colors.teal, // Teal, obviously
   textTheme: TextTheme(
     headlineLarge: GoogleFonts.montserrat(
       fontSize: 32.0,
